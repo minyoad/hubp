@@ -24,9 +24,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            oopsunix/hubp
-            ghcr.io/oopsunix/hubp
-            registry.cn-hangzhou.aliyuncs.com/oopsunix/hubp
+            minyoad/hubp
+            ghcr.io/minyoad/hubp
+            registry.cn-hangzhou.aliyuncs.com/minyoad/hubp
           tags: |
             type=raw,value=latest
             type=ref,event=tag
