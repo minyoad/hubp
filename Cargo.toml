@@ -27,7 +27,7 @@ sync_wrapper = "1.0"
 
 [profile.release]
 opt-level = 'z'     # 优化二进制体积
-lto = true          # 开启链接时优化
-codegen-units = 1   # 降低并行度以获得更好的优化效果
+lto = "thin"        # 瘦 LTO，链接速度远快于 fat LTO，体积差距很小
+codegen-units = 4   # 适度并行，GitHub Actions 2核心下编译快 2-3x
 strip = true        # 自动剥离符号信息
 panic = 'abort'     # 发生 panic 时直接退出，减少标准库体积

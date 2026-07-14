@@ -59,6 +59,24 @@ pub async fn do_proxy(
         proxy_req_builder = proxy_req_builder.header(key, value.clone());
     }
 
+    // 对 Docker Hub 的请求添加 registry 认证 (解决 PAT 强制要求)
+    // 仅当客户端自身未携带 Authorization 头时才注入，避免覆盖客户端的私有仓库凭证
+    if !req_headers.contains_key(axum::http::header::AUTHORIZATION) {
+        if let Some(host) = extract_host(&target_url) {
+            let config = state.config.read().await;
+            for mapping in config.docker.registries.values() {
+                if !mapping.enabled || mapping.username.is_empty() {
+                    continue;
+                }
+                let auth_host_name = mapping.auth_host.split('/').next().unwrap_or("");
+                if host == mapping.upstream || host == auth_host_name {
+                    proxy_req_builder = proxy_req_builder.basic_auth(&mapping.username, Some(&mapping.password));
+                    break;
+                }
+            }
+        }
+    }
+
     // 3. 发起请求
     let proxy_req = match proxy_req_builder.body(reqwest::Body::wrap_stream(body.into_data_stream())).send().await {
         Ok(res) => res,
@@ -265,4 +283,11 @@ pub fn check_list(keywords: &[String], list: &[String]) -> bool {
         }
     }
     false
+}
+
+/// 从 URL 中提取主机名（不含端口）
+fn extract_host(url: &str) -> Option<&str> {
+    let without_scheme = url.strip_prefix("https://")
+        .or_else(|| url.strip_prefix("http://"))?;
+    without_scheme.split('/').next()
 }

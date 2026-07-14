@@ -101,6 +101,12 @@ pub struct RegistryMapping {
     pub _auth_type: String,
     #[serde(default = "default_true")]
     pub enabled: bool,
+    /// Docker Hub 用户名 (用于 registry 认证，解决 PAT 强制要求)
+    #[serde(default)]
+    pub username: String,
+    /// Docker Hub Personal Access Token (PAT) 或密码
+    #[serde(default)]
+    pub password: String,
 }
 
 fn default_true() -> bool { true }
@@ -176,6 +182,8 @@ docker:
       upstream: "registry-1.docker.io"   # 上游 Registry 地址
       authHost: "auth.docker.io/token"   # 认证服务地址
       authType: "docker"                 # 认证类型
+      username: ""                       # Docker Hub 用户名（解决 PAT 强制要求，匿名拉取时使用）
+      password: ""                       # Docker Hub PAT 或密码
     "ghcr.io":
       enabled: true
       upstream: "ghcr.io"

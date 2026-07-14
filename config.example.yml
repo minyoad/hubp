@@ -57,6 +57,8 @@ docker:
       upstream: "registry-1.docker.io"   # 上游 Registry 地址
       authHost: "auth.docker.io/token"   # 认证服务地址
       authType: "docker"                 # 认证类型：docker / github / google / quay / anonymous
+      username: ""                       # Docker Hub 用户名（空表示匿名，Docker Hub 现已要求 PAT）
+      password: ""                       # Docker Hub PAT 或密码
     "ghcr.io":
       enabled: true
       upstream: "ghcr.io"
