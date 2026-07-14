@@ -98,6 +98,26 @@ pub async fn do_proxy(
         p.handle_response(&mut res_headers, &config);
     }
 
+    // 修复 Docker WWW-Authenticate 中的相对路径 realm：
+    // handle_response 会将 realm 的绝对 URL 改写为相对路径 /token，
+    // 但某些 Docker 客户端（Go 实现）无法正确解析相对 realm URL，
+    // 导致 "unsupported protocol scheme" 错误。
+    // 这里利用原始请求的 Host 头将其补全为绝对 URL。
+    if let Some(auth_header) = res_headers.get_mut(axum::http::header::WWW_AUTHENTICATE) {
+        if let Ok(auth_str) = auth_header.to_str() {
+            if auth_str.contains("realm=\"/") {
+                if let Some(host) = req_headers.get(axum::http::header::HOST) {
+                    if let Ok(host_str) = host.to_str() {
+                        let new_auth = auth_str.replace("realm=\"/token\"", &format!("realm=\"https://{}/token\"", host_str));
+                        if let Ok(new_val) = HeaderValue::from_str(&new_auth) {
+                            *auth_header = new_val;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // 6. 处理重定向
     if let Some(location) = res_headers.get(axum::http::header::LOCATION) {
         if let Ok(loc_str) = location.to_str() {
