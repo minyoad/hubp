@@ -189,6 +189,8 @@ docker:
       upstream: "ghcr.io"
       authHost: "ghcr.io/token"
       authType: "github"
+      username: ""                       # GitHub 用户名（GHCR 要求认证，匿名拉取也建议配置）
+      password: ""                       # GitHub Personal Access Token（需 read:packages 权限）
     "gcr.io":
       enabled: true
       upstream: "gcr.io"

@@ -67,17 +67,31 @@ impl ProxyProvider for DockerProvider {
         } else if path.starts_with("token") {
             let query = path.split_once('?').map(|(_, q)| q).unwrap_or("");
             let mut target_auth_host = "auth.docker.io/token".to_string();
+            let mut matched_domain: Option<String> = None;
             if let Some(service) = self.get_query_param(query, "service") {
-                for mapping in config.docker.registries.values() {
+                for (domain, mapping) in &config.docker.registries {
                     if mapping.enabled && (service == mapping.upstream || service.starts_with(&mapping.upstream)) {
                         target_auth_host = mapping.auth_host.clone();
+                        matched_domain = Some(domain.clone());
                         break;
                     }
                 }
             }
-            return if query.is_empty() { format!("https://{}", target_auth_host) } else { format!("https://{}?{}", target_auth_host, query) };
+            // Docker 客户端会把镜像的完整路径作为 scope，包含 registry 域名前缀
+            // 例如 scope=repository:gcr.io/google-containers/pause:pull
+            // 但上游 token 端点期望的是去掉前缀的 scope=repository:google-containers/pause:pull
+            // 这里匹配后剥离对应 registry 的域名前缀
+            if query.is_empty() {
+                format!("https://{}", target_auth_host)
+            } else if let Some(ref domain) = matched_domain {
+                let fixed_query = DockerProvider::strip_scope_prefix(query, domain);
+                format!("https://{}?{}", target_auth_host, fixed_query)
+            } else {
+                format!("https://{}?{}", target_auth_host, query)
+            }
+        } else {
+            path
         }
-        path
     }
 
     fn extract_keywords(&self, path: &str) -> Option<Vec<String>> {
@@ -96,11 +110,17 @@ impl ProxyProvider for DockerProvider {
             if let Ok(auth_str) = auth_header.to_str() {
                 let mut new_auth = auth_str.to_string();
                 for mapping in config.docker.registries.values() {
-                    if mapping.enabled {
-                        let full_auth_url = format!("https://{}", mapping.auth_host);
-                        if new_auth.contains(&full_auth_url) {
-                            new_auth = new_auth.replace(&full_auth_url, "/token");
-                        }
+                    if !mapping.enabled { continue; }
+                    let full_auth_url = format!("https://{}", mapping.auth_host);
+                    if !new_auth.contains(&full_auth_url) { continue; }
+
+                    // 仅当满足以下任一条件时才重写 realm，让 Docker 客户端通过代理获取 token：
+                    // 1. auth 端点与 registry 不在同一域名 (如 docker.io auth → registry-1)
+                    // 2. 配置了认证凭据需要注入 (如 ghcr.io 的 PAT)
+                    let auth_host_domain = mapping.auth_host.split('/').next().unwrap_or("");
+                    let should_rewrite = auth_host_domain != mapping.upstream || !mapping.username.is_empty();
+                    if should_rewrite {
+                        new_auth = new_auth.replace(&full_auth_url, "/token");
                     }
                 }
                 if !new_auth.contains("/token") && new_auth.contains("auth.docker.io/token") {
@@ -111,5 +131,31 @@ impl ProxyProvider for DockerProvider {
                 }
             }
         }
+    }
+}
+
+impl DockerProvider {
+    /// 剥离 scope=repository: 中的 registry 域名前缀
+    fn strip_scope_prefix(query: &str, domain: &str) -> String {
+        let prefix = format!("repository:{}", domain);
+        query.split('&')
+            .map(|param| {
+                if let Some((k, v)) = param.split_once('=') {
+                    if k == "scope" && v.starts_with(&prefix) {
+                        let rest = &v[prefix.len()..];
+                        // 确保前缀后是 '/' (避免误匹配子域名)
+                        if rest.starts_with('/') {
+                            return format!("scope=repository:{}", &rest[1..]);
+                        }
+                        // 整段就是域名本身 (如 scope=repository:docker.io:pull)
+                        if rest.starts_with(':') {
+                            return format!("scope=repository:{}", &rest[1..]);
+                        }
+                    }
+                }
+                param.to_string()
+            })
+            .collect::<Vec<_>>()
+            .join("&")
     }
 }
