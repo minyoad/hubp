@@ -1,4 +1,4 @@
-![hubp](https://socialify.git.ci/oopsunix/hubp/image?font=JetBrains+Mono&forks=1&issues=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F133087009&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Light)
+![hubp](https://socialify.git.ci/minyoad/hubp/image?font=JetBrains+Mono&forks=1&issues=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F133087009&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Light)
 
 <!-- <p align="center">
   <img src="./hubp.png" alt="hubp Icon" width="144" height="144" />
@@ -10,10 +10,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/oopsunix/hubp/releases"><img src="https://img.shields.io/github/v/release/oopsunix/hubp?style=flat-square&label=release&color=blue" alt="Release"></a>
-  <!-- <a href="https://github.com/oopsunix/hubp"><img src="https://img.shields.io/github/stars/oopsunix/hubp?style=flat-square&color=yellow" alt="Stars"></a>
-  <a href="https://github.com/oopsunix/hubp"><img src="https://img.shields.io/github/forks/oopsunix/hubp?style=flat-square" alt="Forks"></a> -->
-  <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/github/license/oopsunix/hubp?style=flat-square" alt="License"></a>
+  <a href="https://github.com/minyoad/hubp/releases"><img src="https://img.shields.io/github/v/release/minyoad/hubp?style=flat-square&label=release&color=blue" alt="Release"></a>
+  <!-- <a href="https://github.com/minyoad/hubp"><img src="https://img.shields.io/github/stars/minyoad/hubp?style=flat-square&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/minyoad/hubp"><img src="https://img.shields.io/github/forks/minyoad/hubp?style=flat-square" alt="Forks"></a> -->
+  <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/github/license/minyoad/hubp?style=flat-square" alt="License"></a>
 </p>
 
 <p align="center">
@@ -45,17 +45,17 @@
 
 ### 使用 Docker (推荐)
 
-1. 创建 `config.yml` 配置文件 — 模板参考 [`config.example.yml`](config.example.yml)。
+1. 创建 `config.yaml` 配置文件 — 模板参考 [`config.example.yml`](config.example.yml)。
 2. 使用以下 [`docker-compose.yml`](docker-compose.yml) 模板：
 
 ```yaml
 services:
   hubp:
-    image: oopsunix/hubp:latest
+    image: minyoad/hubp:latest
     container_name: hubp
     restart: unless-stopped
     volumes:
-      - ./config.yml:/app/config.yml
+      - ./config.yaml:/app/config.yaml
     ports:
       - "45000:45000"
 ```
@@ -70,7 +70,7 @@ docker-compose up -d
 请确保您已安装 Rust 工具链。
 
 ```bash
-git clone https://github.com/oopsunix/hubp.git
+git clone https://github.com/minyoad/hubp.git
 cd hubp
 cargo build --release
 ./target/release/hubp
@@ -80,7 +80,7 @@ cargo build --release
 
 ## ⚙️ 配置说明
 
-`hubp` 通过 `config.yml` 进行配置。
+`hubp` 通过 `config.yaml` 进行配置。
 
 <details>
 <summary>点击展开配置模板</summary>
@@ -158,7 +158,7 @@ git config --global url."https://your-domain.com/https://github.com/".insteadOf 
 
 #### 1. 直接拉取 (作为前缀)
 - **Docker Hub**: `docker pull your-domain.com/library/alpine`
-- **GHCR**: `docker pull your-domain.com/ghcr.io/oopsunix/hubp:latest`
+- **GHCR**: `docker pull your-domain.com/ghcr.io/minyoad/hubp:latest`
 - **Quay**: `docker pull your-domain.com/quay.io/coreos/etcd:latest`
 - **GCR**: `docker pull your-domain.com/gcr.io/google-containers/pause:latest`
 
@@ -214,8 +214,8 @@ cargo build --release
 
 ## 💖 贡献者
 
-<a href="https://github.com/oopsunix/hubp/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=oopsunix/hubp" />
+<a href="https://github.com/minyoad/hubp/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=minyoad/hubp" />
 </a>
 
 ---
@@ -228,5 +228,5 @@ cargo build --release
 
 <div align="center">
   <p>如果你觉得这个项目对你有帮助，不妨给它点个⭐，让更多人发现这款工具！</p>
-  <p>Built with ❤️ by <a href="https://github.com/oopsunix">oopsunix</a></p>
+  <p>Built with ❤️ by <a href="https://github.com/minyoad">minyoad</a></p>
 </div>

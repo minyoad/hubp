@@ -1,4 +1,4 @@
-![hubp](https://socialify.git.ci/oopsunix/hubp/image?font=JetBrains+Mono&forks=1&issues=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F133087009&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Light)
+![hubp](https://socialify.git.ci/minyoad/hubp/image?font=JetBrains+Mono&forks=1&issues=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F133087009&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Light)
 
 <!-- <p align="center">
   <img src="./hubp.png" alt="hubp Icon" width="144" height="144" />
@@ -10,10 +10,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/oopsunix/hubp/releases"><img src="https://img.shields.io/github/v/release/oopsunix/hubp?style=flat-square&label=release&color=blue" alt="Release"></a>
-  <!-- <a href="https://github.com/oopsunix/hubp"><img src="https://img.shields.io/github/stars/oopsunix/hubp?style=flat-square&color=yellow" alt="Stars"></a>
-  <a href="https://github.com/oopsunix/hubp"><img src="https://img.shields.io/github/forks/oopsunix/hubp?style=flat-square" alt="Forks"></a> -->
-  <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/github/license/oopsunix/hubp?style=flat-square" alt="License"></a>
+  <a href="https://github.com/minyoad/hubp/releases"><img src="https://img.shields.io/github/v/release/minyoad/hubp?style=flat-square&label=release&color=blue" alt="Release"></a>
+  <!-- <a href="https://github.com/minyoad/hubp"><img src="https://img.shields.io/github/stars/minyoad/hubp?style=flat-square&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/minyoad/hubp"><img src="https://img.shields.io/github/forks/minyoad/hubp?style=flat-square" alt="Forks"></a> -->
+  <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/github/license/minyoad/hubp?style=flat-square" alt="License"></a>
 </p>
 
 <p align="center">
@@ -45,17 +45,17 @@
 
 ### Using Docker (Recommended)
 
-1. Create a `config.yml` file — a template is available at [`config.example.yml`](config.example.yml).
+1. Create a `config.yaml` file — a template is available at [`config.example.yml`](config.example.yml).
 2. Use the [`docker-compose.yml`](docker-compose.yml) template:
 
 ```yaml
 services:
   hubp:
-    image: oopsunix/hubp:latest
+    image: minyoad/hubp:latest
     container_name: hubp
     restart: unless-stopped
     volumes:
-      - ./config.yml:/app/config.yml
+      - ./config.yaml:/app/config.yaml
     ports:
       - "45000:45000"
 ```
@@ -70,7 +70,7 @@ docker-compose up -d
 Ensure you have the Rust toolchain installed.
 
 ```bash
-git clone https://github.com/oopsunix/hubp.git
+git clone https://github.com/minyoad/hubp.git
 cd hubp
 cargo build --release
 ./target/release/hubp
@@ -80,7 +80,7 @@ cargo build --release
 
 ## ⚙️ Configuration
 
-`hubp` is configured via `config.yml`.
+`hubp` is configured via `config.yaml`.
 
 <details>
 <summary>View Configuration Template</summary>
@@ -158,7 +158,7 @@ git config --global url."https://your-domain.com/https://github.com/".insteadOf 
 
 #### 1. Individual Pull
 - **Docker Hub**: `docker pull your-domain.com/library/alpine`
-- **GHCR**: `docker pull your-domain.com/ghcr.io/oopsunix/hubp:latest`
+- **GHCR**: `docker pull your-domain.com/ghcr.io/minyoad/hubp:latest`
 - **Quay**: `docker pull your-domain.com/quay.io/coreos/etcd:latest`
 - **GCR**: `docker pull your-domain.com/gcr.io/google-containers/pause:latest`
 
@@ -214,9 +214,9 @@ cargo build --release
 
 ## 💖 Contributors
 
-<a href="https://github.com/oopsunix/hubp/graphs/contributors">
+<a href="https://github.com/minyoad/hubp/graphs/contributors">
   <!-- CONTRIBUTORS-IMG:START -->
-  <img src="https://contrib.rocks/image?repo=oopsunix/hubp" />
+  <img src="https://contrib.rocks/image?repo=minyoad/hubp" />
   <!-- CONTRIBUTORS-IMG:END -->
 </a>
 
@@ -230,5 +230,5 @@ This project is licensed under the [Apache License 2.0](LICENSE).
 
 <div align="center">
   <p>If you like this project, give it a ⭐ to help others find it!</p>
-  <p>Built with ❤️ by <a href="https://github.com/oopsunix">oopsunix</a></p>
+  <p>Built with ❤️ by <a href="https://github.com/minyoad">minyoad</a></p>
 </div>
